@@ -76,6 +76,9 @@
       font-size: 18px;
       color: #4caf50;
     }
+    .error {
+      color: #ff0000;
+    }
   </style>
 </head>
 <body>
@@ -92,20 +95,47 @@
     </button>
 
     <div class="result" id="result"></div>
+    <div class="error" id="error"></div>
   </div>
 
   <script>
+    let isSubscribed = false;  // Abone olup olmadığını tutacak değişken
+
+    // Abone olma işlemi
+    document.querySelector('.subscribe-button a').addEventListener('click', function() {
+      alert("Abone olduğunuz için teşekkürler! Artık Robux alabilirsiniz.");
+      isSubscribed = true;
+    });
+
     function generate() {
       let amount = document.getElementById('robuxAmount').value;
       let result = document.getElementById('result');
+      let error = document.getElementById('error');
 
+      // Kullanıcı abone olmadan işlem yapmaya çalışıyorsa
+      if (!isSubscribed) {
+        error.innerHTML = "⛔ Abone olmadan Robux alamazsınız. Lütfen abone olun!";
+        result.innerHTML = "";
+        return;
+      }
+
+      // Maksimum Robux miktarı 450 ile sınırlı
+      if (amount > 450) {
+        error.innerHTML = "⛔ Maksimum Robux miktarı 450'dir!";
+        result.innerHTML = "";
+        return;
+      }
+
+      // Robux miktarı geçerli ise işlem başlatılıyor
       if (amount && amount > 0) {
+        error.innerHTML = "";
         result.innerHTML = "⏳ Robux'un hazırlanıyor...";
         setTimeout(() => {
           result.innerHTML = `🎉 ${amount} Robux 24 saat içinde hesabınıza yansıyacak!<br><br>⏳`;
         }, 3000);
       } else {
-        result.innerHTML = "Lütfen geçerli bir sayı gir!";
+        error.innerHTML = "⛔ Lütfen geçerli bir sayı gir!";
+        result.innerHTML = "";
       }
     }
   </script>
